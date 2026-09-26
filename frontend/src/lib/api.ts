@@ -1,6 +1,4 @@
-import { env } from '$env/dynamic/public';
-
-const BASE = env.PUBLIC_API_URL || 'http://localhost:4000';
+const BASE = import.meta.env.VITE_API_URL;
 
 export class ApiError extends Error {
 	status: number;
