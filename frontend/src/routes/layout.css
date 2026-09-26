@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
+
+@theme {
+	--color-ink: #0a0a0a;
+	--color-surface: #121212;
+	--color-surface-raised: #1c1c1c;
+	--color-line: #2a2a2a;
+	--color-muted: #a1a1aa;
+	--color-accent: #e10600;
+	--color-accent-hover: #ff1f14;
+	--color-accent-soft: rgb(225 6 0 / 0.16);
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	--shadow-glow: 0 0 40px rgb(225 6 0 / 0.18);
+	--shadow-card: 0 12px 40px rgb(0 0 0 / 0.5);
+}
+
+html,
+body {
+	background: var(--color-ink);
+	color: #f4f4f5;
+	font-family: var(--font-sans);
+}
+
+body {
+	min-height: 100vh;
+}
