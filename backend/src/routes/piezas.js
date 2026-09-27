@@ -1,10 +1,11 @@
 const express = require("express");
 const { supabase } = require("../config/supabase");
 const { missing, handleSupabaseError } = require("../utils");
+const { requireAdmin } = require("../middleware/requireAdmin");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", requireAdmin, async (req, res) => {
   const campos = missing(req.body, ["nombre", "precio", "codigo"]);
   if (campos.length) {
     return res.status(400).json({ error: `Faltan campos: ${campos.join(", ")}` });
@@ -50,7 +51,7 @@ router.get("/:id", async (req, res) => {
   return res.json(data);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAdmin, async (req, res) => {
   const payload = {};
   for (const key of ["nombre", "descripcion", "marca", "categoria", "codigo"]) {
     if (req.body[key] !== undefined) payload[key] = req.body[key];
@@ -73,7 +74,7 @@ router.put("/:id", async (req, res) => {
   return res.json(data);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAdmin, async (req, res) => {
   const { data, error } = await supabase
     .from("piezas")
     .delete()

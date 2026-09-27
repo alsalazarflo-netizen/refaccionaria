@@ -1,10 +1,11 @@
 const express = require("express");
 const { supabase } = require("../config/supabase");
 const { missing, mapAuto, autoPayload, handleSupabaseError } = require("../utils");
+const { requireAdmin } = require("../middleware/requireAdmin");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", requireAdmin, async (req, res) => {
   const campos = missing(req.body, ["usuario_id", "marca", "modelo"]);
   if (campos.length) {
     return res.status(400).json({ error: `Faltan campos: ${campos.join(", ")}` });
@@ -42,7 +43,7 @@ router.get("/:id", async (req, res) => {
   return res.json(mapAuto(data));
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAdmin, async (req, res) => {
   const payload = {};
   if (req.body.usuario_id !== undefined) payload.usuario_id = req.body.usuario_id;
   if (req.body.marca !== undefined) payload.marca = req.body.marca;
@@ -68,7 +69,7 @@ router.put("/:id", async (req, res) => {
   return res.json(mapAuto(data));
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAdmin, async (req, res) => {
   const { data, error } = await supabase
     .from("autos")
     .delete()

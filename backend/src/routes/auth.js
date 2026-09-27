@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const { supabase } = require("../config/supabase");
 const { missing, isEmail, omitPassword, handleSupabaseError } = require("../utils");
 const { crearUsuario } = require("./usuarios");
+const { firmarSesion } = require("../middleware/requireAdmin");
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ error: "Correo o contraseña incorrectos." });
   }
 
-  return res.json({ usuario: omitPassword(usuario) });
+  return res.json({ token: firmarSesion(usuario), usuario: omitPassword(usuario) });
 });
 
 module.exports = router;

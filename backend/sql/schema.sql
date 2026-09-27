@@ -9,7 +9,7 @@ create table if not exists usuarios (
   correo text not null unique,
   password text not null,
   telefono text,
-  rol text not null default 'cliente',
+  rol text not null default 'usuario',
   created_at timestamptz not null default now()
 );
 
@@ -60,3 +60,5 @@ alter table piezas enable row level security;
 create policy "usuarios_all" on usuarios for all using (true) with check (true);
 create policy "autos_all" on autos for all using (true) with check (true);
 create policy "piezas_all" on piezas for all using (true) with check (true);
+
+alter table usuarios alter column rol set default 'usuario';

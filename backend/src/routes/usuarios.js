@@ -8,6 +8,7 @@ const {
   mapAuto,
   handleSupabaseError,
 } = require("../utils");
+const { requireAdmin } = require("../middleware/requireAdmin");
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
@@ -30,7 +31,7 @@ async function crearUsuario(req, res) {
       correo: req.body.correo.trim().toLowerCase(),
       password: hash,
       telefono: req.body.telefono ?? null,
-      rol: req.body.rol || "cliente",
+      rol: "usuario",
     })
     .select(USUARIO_PUBLICO)
     .single();
@@ -39,7 +40,7 @@ async function crearUsuario(req, res) {
   return res.status(201).json(data);
 }
 
-router.post("/", crearUsuario);
+router.post("/", requireAdmin, crearUsuario);
 
 router.get("/", async (_req, res) => {
   const { data, error } = await supabase
@@ -83,7 +84,7 @@ router.get("/:id", async (req, res) => {
   return res.json(data);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAdmin, async (req, res) => {
   const payload = {};
   for (const key of ["nombre", "apellido", "correo", "telefono", "rol"]) {
     if (req.body[key] !== undefined) payload[key] = req.body[key];
@@ -113,7 +114,7 @@ router.put("/:id", async (req, res) => {
   return res.json(data);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAdmin, async (req, res) => {
   const { data, error } = await supabase
     .from("usuarios")
     .delete()
