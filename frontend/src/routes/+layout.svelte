@@ -11,9 +11,12 @@
 	<title>Refaccionaria</title>
 </svelte:head>
 
-<div class="min-h-screen bg-ink font-sans text-zinc-100">
+<div class="flex min-h-screen flex-col bg-ink font-sans text-zinc-100">
 	<Navbar />
-	<main class="pt-16">
+	<main class="flex-1 pt-16">
 		{@render children()}
 	</main>
+	<footer class="border-t border-line px-4 py-4 text-center text-sm text-muted">
+		Evelyn Soto Avila · Alejandra Salazar Flores
+	</footer>
 </div>
