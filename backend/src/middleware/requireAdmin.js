@@ -19,6 +19,11 @@ function requireAdmin(req, res, next) {
 }
 
 function firmarSesion(usuario) {
+  if (!process.env.JWT_SECRET) {
+    const error = new Error("Falta JWT_SECRET en el servidor.");
+    error.status = 500;
+    throw error;
+  }
   return jwt.sign(
     { id: usuario.id, correo: usuario.correo, rol: usuario.rol },
     process.env.JWT_SECRET,
