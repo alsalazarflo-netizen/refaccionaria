@@ -15,6 +15,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:4173",
+      "https://refaccionaria-1-oz6m.onrender.com",
       "https://refaccionaria-2-fop1.onrender.com",
     ],
   })
