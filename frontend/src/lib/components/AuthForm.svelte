@@ -55,11 +55,11 @@
 				});
 				auth.setUsuario(usuario);
 			} else {
-				const data = await api<{ usuario: Usuario }>('/api/auth/login', {
+				const data = await api<{ usuario: Usuario; token: string }>('/api/auth/login', {
 					method: 'POST',
 					body: JSON.stringify({ correo: correo.trim(), password })
 				});
-				auth.setUsuario(data.usuario);
+				auth.setUsuario(data.usuario, data.token);
 			}
 			await goto('/perfil');
 		} catch (err) {

@@ -10,6 +10,10 @@
 		{ href: '/perfil', label: 'Perfil' }
 	];
 
+	const visibles = $derived(
+		links.filter((link) => link.href !== '/usuarios' || $auth?.rol === 'admin')
+	);
+
 	let abierto = $state(false);
 
 	function activo(href: string) {
@@ -27,7 +31,7 @@
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">
-			{#each links as link (link.href)}
+			{#each visibles as link (link.href)}
 				<a
 					href={link.href}
 					class="rounded-md px-3 py-2 text-sm transition-colors {activo(link.href)
@@ -65,7 +69,7 @@
 			class="border-t border-line bg-surface px-4 py-3 md:hidden"
 			transition:fly={{ y: -8, duration: 180 }}
 		>
-			{#each links as link (link.href)}
+			{#each visibles as link (link.href)}
 				<a
 					href={link.href}
 					class="block rounded-md px-3 py-2 text-sm {activo(link.href)

@@ -10,9 +10,14 @@ export class ApiError extends Error {
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
 	const { headers, signal, ...rest } = init ?? {};
+	const token = typeof localStorage === 'undefined' ? null : localStorage.getItem('refaccionaria.token');
 	const res = await fetch(`${BASE}${path}`, {
 		...rest,
-		headers: { 'Content-Type': 'application/json', ...(headers as HeadersInit) },
+		headers: {
+			'Content-Type': 'application/json',
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+			...(headers as HeadersInit)
+		},
 		signal: signal ?? AbortSignal.timeout(10000)
 	});
 	const body = await res.json().catch(() => ({}));

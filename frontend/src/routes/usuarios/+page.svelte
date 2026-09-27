@@ -1,14 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { fly } from 'svelte/transition';
 	import { api } from '$lib/api';
+	import { auth } from '$lib/stores/auth';
 	import type { Usuario } from '$lib/types';
 
 	let usuarios = $state<Usuario[]>([]);
 	let error = $state('');
 	let cargando = $state(true);
+	const esAdmin = $derived($auth?.rol === 'admin');
 
 	onMount(() => {
+		if ($auth?.rol !== 'admin') {
+			goto('/piezas?aviso=permisos');
+			return;
+		}
 		api<Usuario[]>('/api/usuarios')
 			.then((data) => {
 				usuarios = data;
@@ -29,12 +36,14 @@
 			<h1 class="mt-2 text-3xl font-semibold tracking-tight">Usuarios</h1>
 			<p class="mt-2 text-muted">Listado desde el API. Para crear uno usa Registro.</p>
 		</div>
-		<a
-			class="rounded-lg bg-accent px-4 py-2 text-center text-sm font-medium text-white hover:bg-accent-hover"
-			href="/registro"
-		>
-			Nuevo usuario
-		</a>
+		{#if esAdmin}
+			<a
+				class="rounded-lg bg-accent px-4 py-2 text-center text-sm font-medium text-white hover:bg-accent-hover"
+				href="/registro"
+			>
+				Nuevo usuario
+			</a>
+		{/if}
 	</div>
 
 	{#if cargando}

@@ -92,6 +92,7 @@
 		</div>
 
 		<div class="space-y-6">
+			{#if $auth?.rol === 'admin'}
 			<form class="rounded-xl border border-line bg-surface p-4 shadow-card" onsubmit={crear}>
 				<p class="mb-3 text-sm font-medium">Registrar auto</p>
 				<input bind:value={marca} class="mb-2 w-full rounded-lg border border-line bg-ink px-3 py-2 outline-none focus:border-accent" placeholder="Marca" required />
@@ -105,6 +106,7 @@
 					Guardar auto
 				</button>
 			</form>
+			{/if}
 
 			<div>
 				<p class="mb-2 text-sm text-muted">Modelos</p>

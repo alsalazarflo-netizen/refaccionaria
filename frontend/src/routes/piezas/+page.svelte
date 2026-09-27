@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import { fade, fly } from 'svelte/transition';
 	import { api } from '$lib/api';
 	import PiezaCard from '$lib/components/PiezaCard.svelte';
+	import { auth } from '$lib/stores/auth';
 	import type { Pieza } from '$lib/types';
 
 	let piezas = $state<Pieza[]>([]);
@@ -72,6 +74,9 @@
 		}
 	}
 
+	const esAdmin = $derived($auth?.rol === 'admin');
+	const sinPermiso = $derived(page.url.searchParams.get('aviso') === 'permisos');
+
 	const categorias = $derived([
 		'todas',
 		...[...new Set(piezas.map((p) => p.categoria).filter(Boolean))] as string[]
@@ -95,16 +100,22 @@
 	<p class="text-xs font-medium uppercase tracking-[0.2em] text-accent">Inventario</p>
 	<div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
 		<h1 class="text-3xl font-semibold tracking-tight">Piezas</h1>
-		<button
-			class="rounded-lg border border-line px-4 py-2 text-sm hover:border-accent/50"
-			type="button"
-			onclick={() => (mostrarForm = !mostrarForm)}
-		>
-			{mostrarForm ? 'Cerrar' : 'Agregar pieza'}
-		</button>
+		{#if esAdmin}
+			<button
+				class="rounded-lg border border-line px-4 py-2 text-sm hover:border-accent/50"
+				type="button"
+				onclick={() => (mostrarForm = !mostrarForm)}
+			>
+				{mostrarForm ? 'Cerrar' : 'Agregar pieza'}
+			</button>
+		{/if}
 	</div>
 
-	{#if mostrarForm}
+	{#if sinPermiso}
+		<p class="mt-4 text-sm text-accent">No tienes permisos.</p>
+	{/if}
+
+	{#if esAdmin && mostrarForm}
 		<form class="mt-4 grid gap-2 rounded-xl border border-line bg-surface p-4 sm:grid-cols-2 lg:grid-cols-3" onsubmit={crearPieza}>
 			<input bind:value={nombre} class="rounded-lg border border-line bg-ink px-3 py-2 outline-none focus:border-accent" placeholder="Nombre" required />
 			<input bind:value={codigo} class="rounded-lg border border-line bg-ink px-3 py-2 outline-none focus:border-accent" placeholder="Código" required />

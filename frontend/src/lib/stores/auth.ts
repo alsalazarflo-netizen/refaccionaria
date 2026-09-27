@@ -3,6 +3,7 @@ import { writable } from 'svelte/store';
 import type { Usuario } from '$lib/types';
 
 const KEY = 'refaccionaria.usuario';
+const TOKEN_KEY = 'refaccionaria.token';
 
 function leer(): Usuario | null {
 	if (!browser) return null;
@@ -19,12 +20,18 @@ function crearStore() {
 
 	return {
 		subscribe,
-		setUsuario(u: Usuario) {
-			if (browser) localStorage.setItem(KEY, JSON.stringify(u));
+		setUsuario(u: Usuario, token?: string) {
+			if (browser) {
+				localStorage.setItem(KEY, JSON.stringify(u));
+				if (token) localStorage.setItem(TOKEN_KEY, token);
+			}
 			set(u);
 		},
 		logout() {
-			if (browser) localStorage.removeItem(KEY);
+			if (browser) {
+				localStorage.removeItem(KEY);
+				localStorage.removeItem(TOKEN_KEY);
+			}
 			set(null);
 		}
 	};
