@@ -11,7 +11,14 @@ const authRouter = require("./routes/auth");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://refaccionaria-2-fop1.onrender.com",
+    ],
+  })
+);
 app.use(express.json());
 
 app.get("/", (_req, res) => {
