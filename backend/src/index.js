@@ -7,6 +7,7 @@ const { router: usuariosRouter } = require("./routes/usuarios");
 const autosRouter = require("./routes/autos");
 const piezasRouter = require("./routes/piezas");
 const authRouter = require("./routes/auth");
+const escaneosRouter = require("./routes/escaneos");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,7 +35,9 @@ app.get("/", (_req, res) => {
       "POST /api/auth/login",
       "GET /api/usuarios",
       "GET /api/autos",
-      "GET /api/piezas"
+      "GET /api/piezas",
+      "GET /api/escaneos",
+      "POST /api/escaneos"
     ]
   });
 });
@@ -47,6 +50,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/usuarios", usuariosRouter);
 app.use("/api/autos", autosRouter);
 app.use("/api/piezas", piezasRouter);
+app.use("/api/escaneos", escaneosRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Ruta no encontrada." });

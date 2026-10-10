@@ -62,3 +62,19 @@ create policy "autos_all" on autos for all using (true) with check (true);
 create policy "piezas_all" on piezas for all using (true) with check (true);
 
 alter table usuarios alter column rol set default 'usuario';
+
+create table if not exists escaneos (
+  id uuid primary key default gen_random_uuid(),
+  client_id text not null unique,
+  usuario_id uuid not null references usuarios(id) on delete cascade,
+  codigo text not null,
+  lat double precision,
+  lng double precision,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_escaneos_usuario_id on escaneos(usuario_id, created_at desc);
+
+alter table escaneos enable row level security;
+drop policy if exists "escaneos_all" on escaneos;
+create policy "escaneos_all" on escaneos for all using (true) with check (true);
